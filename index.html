@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-trae-theme="light" class=""><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 爱心弹窗</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #1a1a2e;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 加载提示 */
+.loading {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  z-index: 9999;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+.loading.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading .heart-icon {
+  font-size: 60px;
+  animation: pulse 1s ease-in-out infinite;
+}
+.loading .text {
+  color: #fff;
+  margin-top: 16px;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.loading button {
+  margin-top: 24px;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #f857a6, #ff5858);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: transform 0.2s;
+}
+.loading button:active { transform: scale(0.95); }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* 弹窗容器 */
+.popup-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+/* 弹窗 */
+.popup {
+  position: absolute;
+  width: 260px;
+  min-height: 100px;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.3s;
+}
+.popup:hover { transform: scale(1.05); }
+.popup.fading { animation: fadeOut 0.3s ease forwards; }
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeOut {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.5); opacity: 0; }
+}
+
+.popup .icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+.popup .content {
+  flex: 1;
+  min-width: 0;
+}
+.popup .content .text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* 配色方案 */
+.popup.scheme-pink    { background: rgba(255, 228, 230, 0.92); color: #BE123C; }
+.popup.scheme-blue    { background: rgba(240, 249, 255, 0.92); color: #0369A1; }
+.popup.scheme-green   { background: rgba(240, 253, 244, 0.92); color: #15803D; }
+.popup.scheme-yellow  { background: rgba(255, 247, 205, 0.92); color: #854D0E; }
+.popup.scheme-purple  { background: rgba(250, 245, 255, 0.92); color: #7C3AED; }
+.popup.scheme-rose    { background: rgba(255, 241, 242, 0.92); color: #9F1239; }
+.popup.scheme-cyan    { background: rgba(236, 254, 255, 0.92); color: #0E7490; }
+.popup.scheme-orange  { background: rgba(255, 247, 237, 0.92); color: #9A3412; }
+
+/* 背景粒子 */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  animation: floatUp linear forwards;
+  font-size: 20px;
+  opacity: 0.6;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* 提示文字 */
+.hint {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  letter-spacing: 1px;
+  z-index: 100;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .popup {
+    width: 200px;
+    min-height: 80px;
+    padding: 12px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+  .popup .icon { font-size: 24px; }
+  .popup .content .text { font-size: 12px; }
+}
+</style>
+<script>document.documentElement.setAttribute('data-trae-theme', "light");window.__TRAE_DISABLE_LEGACY_ADD_TO_CHAT__=true;</script><style data-trae-edit-ui="true" id="trae-previewer-tools-styles">:root,
+[data-trae-theme='dark'] {
+  --trae-bg-base-default: #171717;
+  --trae-bg-menu: #222427;
+  --trae-bg-overlay-l1: rgba(255, 255, 255, 0.04);
+  --trae-bg-overlay-l2: rgba(255, 255, 255, 0.08);
+  --trae-bg-overlay-l3: rgba(255, 255, 255, 0.12);
+  --trae-bg-overlay-l4: rgba(255, 255, 255, 0.16);
+  --trae-bg-invert: #f5f9fe;
+  --trae-bg-invert-hover: #e8ecf0;
+  --trae-bg-invert-active: #dce0e4;
+  --trae-bg-invert-disabled: rgba(224, 226, 242, 0.12);
+  --trae-border-l1: #e0e2f217;
+  --trae-border-l2: rgba(255, 255, 255, 0.12);
+  --trae-border-l3: rgba(255, 255, 255, 0.08);
+  --trae-border-neutral-l3: rgba(229, 229, 229, 0.20);
+  --trae-border-brand: #6a6fff;
+  --trae-text-default: #f5f9fe;
+  --trae-text-default-hover: #f5f9fe;
+  --trae-text-default-active: #f5f9fe;
+  --trae-text-secondary: rgba(245, 249, 254, 0.5);
+  --trae-text-tertiary: rgba(245, 249, 254, 0.4);
+  --trae-text-disabled: #666b75;
+  --trae-text-onaccent: #222427;
+  --trae-icon-default: #f5f9fe;
+  --trae-icon-secondary: rgba(245, 249, 254, 0.5);
+  --trae-icon-brand: #6a6fff;
+  --trae-icon-onaccent: #222427;
+  --trae-status-success: #22c55e;
+  --trae-status-primary: #3b82f6;
+  --trae-status-primary-default: #387bff;
+  --trae-status-primary-surface-l1: rgba(53, 121, 255, 0.18);
+  --trae-status-success-default: #33c192;
+  --trae-status-success-surface-l1: rgba(0, 165, 110, 0.18);
+  --trae-status-error-default: #f65a5a;
+  --trae-status-error-surface-l1: rgba(246, 70, 70, 0.18);
+  --trae-annotation-marker-bg: #4b3fe3;
+  --trae-annotation-marker-text: #ffffff;
+  --trae-annotation-region-border: var(--trae-status-primary-default);
+  --trae-annotation-rect-border: var(--trae-status-error-default);
+  --trae-annotation-arrow-anchor-bg: var(--trae-status-primary-default);
+  --trae-panel-shadow: 0px 6px 24px -1px rgba(0, 0, 0, 0.16);
+  --trae-floating-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+  --trae-shadow-elevation-50: 0 1px 2px -1px rgba(0, 0, 0, 0.45);
+  --trae-tab-active-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.16);
+}
+
+[data-trae-theme='light'] {
+  --trae-bg-base-default: #fafafa;
+  --trae-bg-menu: #ffffff;
+  --trae-bg-overlay-l1: rgba(0, 0, 0, 0.04);
+  --trae-bg-overlay-l2: rgba(0, 0, 0, 0.06);
+  --trae-bg-overlay-l3: rgba(0, 0, 0, 0.08);
+  --trae-bg-overlay-l4: rgba(0, 0, 0, 0.12);
+  --trae-bg-invert: #1f2328;
+  --trae-bg-invert-hover: #32383f;
+  --trae-bg-invert-active: #444d56;
+  --trae-bg-invert-disabled: rgba(115, 115, 115, 0.20);
+  --trae-border-l1: rgba(0, 0, 0, 0.1);
+  --trae-border-l2: rgba(0, 0, 0, 0.12);
+  --trae-border-l3: rgba(0, 0, 0, 0.08);
+  --trae-border-neutral-l3: rgba(115, 115, 115, 0.36);
+  --trae-border-brand: #4b3fe3;
+  --trae-text-default: #1f2328;
+  --trae-text-default-hover: #111214;
+  --trae-text-default-active: #111214;
+  --trae-text-secondary: rgba(31, 35, 40, 0.5);
+  --trae-text-tertiary: rgba(31, 35, 40, 0.4);
+  --trae-text-disabled: #a1a1a1;
+  --trae-text-onaccent: #ffffff;
+  --trae-icon-default: #1f2328;
+  --trae-icon-secondary: rgba(31, 35, 40, 0.5);
+  --trae-icon-brand: #4b3fe3;
+  --trae-icon-onaccent: #ffffff;
+  --trae-status-success: #22c55e;
+  --trae-status-primary: #3b82f6;
+  --trae-status-primary-default: #2f74ff;
+  --trae-status-primary-surface-l1: rgba(47, 116, 255, 0.12);
+  --trae-status-success-default: #15a877;
+  --trae-status-success-surface-l1: rgba(64, 176, 139, 0.12);
+  --trae-status-error-default: #e8463a;
+  --trae-status-error-surface-l1: rgba(232, 70, 58, 0.12);
+  --trae-annotation-marker-bg: #4b3fe3;
+  --trae-annotation-marker-text: #ffffff;
+  --trae-annotation-region-border: var(--trae-status-primary-default);
+  --trae-annotation-rect-border: var(--trae-status-error-default);
+  --trae-annotation-arrow-anchor-bg: var(--trae-status-primary-default);
+  --trae-panel-shadow: 0px 6px 24px -1px rgba(24, 24, 24, 0.06);
+  --trae-floating-shadow: 0px 2px 8px 0px rgba(24, 24, 24, 0.2);
+  --trae-shadow-elevation-50: 0 1px 2px -1px rgba(24, 24, 24, 0.08);
+  --trae-tab-active-shadow: 0px 1px 2px -1px rgba(24, 24, 24, 0.08);
+}
+
+@keyframes trae-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trae-edit-mode-active body *:not([data-trae-edit-ui]):not([data-trae-edit-ui] *) {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+.trae-browser-inspect-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* stylelint-disable-next-line scale-unlimited/declaration-strict-value -- 独立注入 CSS，无法访问 :root 变量 */
+  z-index: 1400; /* z-layer: fullscreen (1400) */
+  pointer-events: auto;
+  background: transparent;
+}
+
+.trae-browser-inspect-highlight-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* stylelint-disable-next-line scale-unlimited/declaration-strict-value -- 独立注入 CSS，无法访问 :root 变量 */
+  z-index: 1401; /* above overlay */
+  display: none;
+}
+
+.trae-browser-inspect-highlight-tag {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 18px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background-color: var(--trae-status-success-default);
+  color: var(--trae-text-onaccent);
+  font-size: 12px;
+  font-weight: 400;
+  display: none;
+  align-items: center;
+  /* stylelint-disable-next-line scale-unlimited/declaration-strict-value -- 独立注入 CSS，无法访问 :root 变量 */
+  z-index: 1402; /* above highlight-box */
+}
+
+.trae-browser-inspect-highlight-box-show {
+  display: flex;
+}
+
+.trae-browser-inspect-highlight-tag.trae-browser-inspect-highlight-box-show {
+  display: none;
+}
+
+.trae-browser-inspect-select-button.trae-browser-inspect-highlight-box-show {
+  display: block !important;
+}
+
+.trae-browser-inspect-select-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  /* stylelint-disable-next-line scale-unlimited/declaration-strict-value -- 独立注入 CSS，无法访问 :root 变量 */
+  z-index: 1402; /* above overlay, must receive pointer events */
+}
+
+.trae-browser-inspect-select-highlight-box {
+  background: transparent !important;
+}
+
+.trae-browser-inspect-select-highlight-box .trae-browser-inspect-highlight-tag {
+  background-color: var(--trae-status-success-default);
+}
+
+.trae-add-to-chat-card {
+  display: block;
+  overflow: hidden;
+  background: var(--trae-bg-menu);
+  border: 1px solid var(--trae-border-l1);
+  border-radius: 8px;
+  box-shadow: var(--trae-floating-shadow);
+  transition:
+    width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trae-add-to-chat-content {
+  position: relative;
+  width: max-content;
+}
+
+.trae-fade-exit {
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
+
+.trae-fade-enter {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.trae-buttons-view {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 4px;
+  background: transparent;
+}
+
+.trae-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.trae-action-button:hover {
+  background: var(--trae-bg-overlay-l2);
+}
+
+.trae-action-button:active {
+  background: var(--trae-bg-overlay-l3);
+}
+
+.trae-action-button:focus-visible {
+  outline: 2px solid var(--trae-status-primary);
+  outline-offset: 1px;
+}
+
+.trae-action-button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--trae-icon-default);
+  flex-shrink: 0;
+}
+
+.trae-action-button-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--trae-text-default);
+  white-space: nowrap;
+}
+
+.trae-edit-toolbar-button-active {
+  background: var(--trae-status-primary-surface-l1) !important;
+  color: var(--trae-status-primary-default) !important;
+}
+
+.trae-edit-toolbar button[data-action='alignment-dropdown']:hover,
+.trae-edit-toolbar button[data-action='text-align-dropdown']:hover,
+.trae-edit-toolbar button[data-action='font-decrease']:hover,
+.trae-edit-toolbar button[data-action='font-increase']:hover,
+.trae-edit-toolbar button[data-action^='align-']:hover {
+  border-radius: 8px;
+  background: var(--bg-bg-overlay-l1, rgba(115, 115, 115, 0.08)) !important;
+}
+
+.trae-edit-toolbar button[data-action='alignment-dropdown']:active,
+.trae-edit-toolbar button[data-action='text-align-dropdown']:active,
+.trae-edit-toolbar button[data-action='font-decrease']:active,
+.trae-edit-toolbar button[data-action='font-increase']:active,
+.trae-edit-toolbar button[data-action^='align-']:active {
+  border-radius: 8px;
+  background: var(--bg-bg-overlay-l2, rgba(115, 115, 115, 0.12)) !important;
+}
+
+.trae-comment-input {
+  background: transparent;
+  color: var(--trae-text-default);
+  caret-color: var(--trae-text-default);
+}
+
+.trae-comment-input::placeholder {
+  color: var(--trae-text-tertiary);
+}
+
+.trae-edit-panel [data-trae-tooltip] {
+  position: relative;
+}
+
+.trae-edit-panel [data-trae-tooltip]::after {
+  content: attr(data-trae-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: var(--z-max, 9999);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--bg-bg-invert, var(--trae-bg-invert));
+  color: var(--text-text-onaccent, var(--trae-text-onaccent));
+  box-shadow: var(--trae-floating-shadow);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.039px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateX(-50%);
+  visibility: hidden;
+}
+
+.trae-edit-panel [data-trae-tooltip]::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 5px);
+  z-index: var(--z-max, 9999);
+  width: 8px;
+  height: 4px;
+  background: var(--bg-bg-invert, var(--trae-bg-invert));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.trae-edit-panel [data-trae-tooltip]:hover::after,
+.trae-edit-panel [data-trae-tooltip]:focus-visible::after,
+.trae-edit-panel [data-trae-tooltip]:hover::before,
+.trae-edit-panel [data-trae-tooltip]:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.trae-comment-btn {
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.trae-comment-btn:disabled {
+  cursor: not-allowed;
+}
+
+.trae-comment-btn:focus-visible {
+  outline: 2px solid var(--trae-status-primary);
+  outline-offset: 1px;
+}
+
+.trae-comment-btn-primary {
+  background: var(--trae-bg-invert);
+  color: var(--trae-text-onaccent);
+}
+
+.trae-comment-btn-primary:hover:not(:disabled) {
+  background: var(--trae-bg-invert-hover);
+}
+
+.trae-comment-btn-primary:active:not(:disabled) {
+  background: var(--trae-bg-invert-active);
+}
+
+.trae-comment-btn-primary:disabled {
+  background: var(--trae-bg-invert-disabled);
+  color: var(--trae-text-disabled);
+}
+
+.trae-comment-btn-secondary {
+  background: var(--trae-bg-overlay-l2);
+  color: var(--trae-text-default);
+}
+
+.trae-comment-btn-secondary:hover:not(:disabled) {
+  background: var(--trae-bg-overlay-l3);
+}
+
+.trae-comment-btn-secondary:active:not(:disabled) {
+  background: var(--trae-bg-overlay-l4);
+}
+
+.trae-comment-btn-secondary:disabled {
+  background: var(--trae-bg-overlay-l2);
+  color: var(--trae-text-disabled);
+}
+
+.trae-comment-btn-text {
+  background: transparent;
+  color: var(--trae-text-default);
+}
+
+.trae-comment-btn-text:hover:not(:disabled) {
+  border-radius: 8px;
+  background: var(--bg-bg-overlay-l1, var(--trae-bg-overlay-l1));
+  color: var(--trae-text-default-hover);
+}
+
+.trae-comment-btn-text:active:not(:disabled) {
+  border-radius: 8px;
+  background: var(--trae-bg-overlay-l2);
+  color: var(--trae-text-default-active);
+}
+
+.trae-comment-btn-text:disabled {
+  background: transparent;
+  color: var(--trae-text-disabled);
+}
+
+.trae-marking-btn {
+  justify-content: center;
+}
+
+.trae-marking-btn:hover:not(:disabled) {
+  background: var(--trae-bg-overlay-l1) !important;
+}
+
+.trae-marking-btn:active:not(:disabled) {
+  background: var(--trae-bg-overlay-l2) !important;
+}
+
+.trae-marking-btn-active {
+  background: var(--trae-status-primary-surface-l1) !important;
+  color: var(--trae-status-primary-default) !important;
+}
+
+.trae-marking-btn:disabled {
+  color: var(--trae-text-disabled) !important;
+  cursor: not-allowed !important;
+}
+
+.trae-action-button-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--trae-icon-secondary);
+  flex-shrink: 0;
+}
+
+.trae-shortcut-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.trae-shortcut-key {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 12px;
+  color: var(--trae-icon-secondary);
+}
+
+.trae-add-to-chat-divider {
+  width: 2px;
+  height: 12px;
+  padding: 0 6px;
+  box-sizing: content-box;
+  background-clip: content-box;
+  background-color: var(--trae-border-l2);
+  flex-shrink: 0;
+}
+
+.trae-editor-view {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  padding: 8px;
+  background: transparent;
+}
+
+.trae-editor-text-container {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: var(--trae-bg-overlay-l1);
+  border: 1px solid var(--trae-border-l3);
+  border-radius: 4px;
+  gap: 8px;
+}
+
+.trae-editor-textarea {
+  flex: 1;
+  padding: 0 2px;
+  border: none;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--trae-text-default);
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+  max-height: 140px;
+}
+
+.trae-editor-textarea::placeholder {
+  color: var(--trae-text-tertiary);
+}
+
+.trae-editor-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.2s ease-out,
+    opacity 0.2s ease-out,
+    margin-top 0.2s ease-out;
+}
+
+.trae-editor-action-bar-visible {
+  max-height: 32px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.trae-editor-cancel-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 4px;
+  background: var(--trae-bg-overlay-l2);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.trae-editor-cancel-button:hover {
+  background: var(--trae-bg-overlay-l3);
+}
+
+.trae-editor-cancel-button:active {
+  background: var(--trae-bg-overlay-l3);
+}
+
+.trae-editor-cancel-button:focus-visible {
+  outline: 2px solid var(--trae-status-primary);
+  outline-offset: 1px;
+}
+
+.trae-editor-cancel-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--trae-text-default);
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+.trae-editor-submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 8px;
+  background: var(--trae-bg-invert);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.trae-editor-submit-button:hover {
+  background: var(--trae-bg-invert-hover);
+}
+
+.trae-editor-submit-button:active {
+  background: var(--trae-bg-invert-active);
+}
+
+.trae-editor-submit-button:focus-visible {
+  outline: 2px solid var(--trae-status-primary);
+  outline-offset: 1px;
+}
+
+.trae-editor-submit-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--trae-text-onaccent);
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+.trae-editor-submit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  color: var(--trae-icon-onaccent);
+  flex-shrink: 0;
+}
+
+.trae-success-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 32px;
+  white-space: nowrap;
+}
+
+.trae-success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--trae-status-success);
+  flex-shrink: 0;
+}
+
+.trae-success-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--trae-text-default);
+  user-select: none;
+}
+</style></head>
+<body>
+
+<!-- 加载页 -->
+<div class="loading hidden" id="loading">
+  <div class="heart-icon">💖</div>
+  <div class="text">点击开始</div>
+  <button id="startBtn">💕 打开惊喜 💕</button>
+</div>
+
+<!-- 弹窗容器 -->
+<div class="popup-container" id="popupContainer"><div class="popup scheme-pink" style="left: 112.829px; top: 520.68px;"><span class="icon">☀️</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-purple" style="left: 99.9383px; top: 87.7416px;"><span class="icon">💕</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-purple" style="left: 132.213px; top: 569.922px;"><span class="icon">🍀</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-orange" style="left: 42.5573px; top: 451.911px;"><span class="icon">🌟</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-pink" style="left: 202.517px; top: 32.2447px;"><span class="icon">✨</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-orange" style="left: 75.337px; top: 628.009px;"><span class="icon">🎀</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-blue" style="left: 221.377px; top: 612.946px;"><span class="icon">💝</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-rose" style="left: 196.304px; top: 552.452px;"><span class="icon">✨</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-cyan" style="left: 207.048px; top: 450.063px;"><span class="icon">🌸</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-rose" style="left: 82.4967px; top: 403.114px;"><span class="icon">🌷</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-purple" style="left: 170.835px; top: 643.381px;"><span class="icon">✨</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-blue" style="left: 471px; top: 317px;"><span class="icon">🌷</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-cyan" style="left: 471px; top: 312px;"><span class="icon">🍀</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-cyan" style="left: 474px; top: 297px;"><span class="icon">💕</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-cyan" style="left: 63.6391px; top: 646.037px;"><span class="icon">💖</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-orange" style="left: 482px; top: 275px;"><span class="icon">💖</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-purple" style="left: 496px; top: 247px;"><span class="icon">🌸</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-rose" style="left: 517px; top: 219px;"><span class="icon">🎵</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-orange" style="left: 546px; top: 192px;"><span class="icon">💫</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-green" style="left: 115.866px; top: 310.334px;"><span class="icon">☀️</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-orange" style="left: 582px; top: 172px;"><span class="icon">💖</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-yellow" style="left: 623px; top: 159px;"><span class="icon">🌸</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-orange" style="left: 667px; top: 158px;"><span class="icon">🎈</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-pink" style="left: 682px; top: 167px;"><span class="icon">✨</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-pink" style="left: 125.801px; top: 573.684px;"><span class="icon">🌟</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-blue" style="left: 682px; top: 187px;"><span class="icon">🫧</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 216px;"><span class="icon">🌷</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 253px;"><span class="icon">🌻</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-green" style="left: 682px; top: 295px;"><span class="icon">🌟</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-blue" style="left: 682px; top: 340px;"><span class="icon">☀️</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-orange" style="left: 187.658px; top: 592.55px;"><span class="icon">🫧</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-green" style="left: 682px; top: 387px;"><span class="icon">🫧</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-orange" style="left: 682px; top: 433px;"><span class="icon">💕</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-pink" style="left: 682px; top: 477px;"><span class="icon">🦋</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-purple" style="left: 682px; top: 520px;"><span class="icon">💝</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-cyan" style="left: 231.557px; top: 245.489px;"><span class="icon">💕</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-cyan" style="left: 682px; top: 560px;"><span class="icon">💖</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-purple" style="left: 667px; top: 599px;"><span class="icon">🦋</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-green" style="left: 623px; top: 637px;"><span class="icon">🎈</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-purple" style="left: 119.335px; top: 510.054px;"><span class="icon">🌸</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-green" style="left: 582px; top: 673px;"><span class="icon">✨</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-rose" style="left: 546px; top: 708px;"><span class="icon">💖</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-orange" style="left: 517px; top: 740px;"><span class="icon">💕</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-green" style="left: 496px; top: 769px;"><span class="icon">🍀</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-pink" style="left: 76.8304px; top: 599.884px;"><span class="icon">🌷</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-purple" style="left: 482px; top: 793px;"><span class="icon">🦋</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-yellow" style="left: 474px; top: 811px;"><span class="icon">💝</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-cyan" style="left: 471px; top: 823px;"><span class="icon">🦋</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-cyan" style="left: 471px; top: 826px;"><span class="icon">🦋</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-yellow" style="left: 136.093px; top: 128.726px;"><span class="icon">✨</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-rose" style="left: 471px; top: 823px;"><span class="icon">💕</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-orange" style="left: 468px; top: 811px;"><span class="icon">💫</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-pink" style="left: 460px; top: 793px;"><span class="icon">🌻</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-green" style="left: 446px; top: 769px;"><span class="icon">🦋</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-yellow" style="left: 425px; top: 740px;"><span class="icon">☀️</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-rose" style="left: 88.5558px; top: 632.271px;"><span class="icon">🎈</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-green" style="left: 396px; top: 708px;"><span class="icon">☀️</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-pink" style="left: 360px; top: 673px;"><span class="icon">🌷</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-pink" style="left: 319px; top: 637px;"><span class="icon">💕</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-purple" style="left: 275px; top: 599px;"><span class="icon">☀️</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-rose" style="left: 17.2902px; top: 269.319px;"><span class="icon">🌟</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-purple" style="left: 230px; top: 560px;"><span class="icon">🫧</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-green" style="left: 189px; top: 520px;"><span class="icon">🌻</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-rose" style="left: 152px; top: 477px;"><span class="icon">💫</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-purple" style="left: 227.756px; top: 101.092px;"><span class="icon">🌟</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-purple" style="left: 124px; top: 433px;"><span class="icon">☀️</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-green" style="left: 107px; top: 387px;"><span class="icon">🦋</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-pink" style="left: 101px; top: 340px;"><span class="icon">💕</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-blue" style="left: 107px; top: 295px;"><span class="icon">🫧</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-pink" style="left: 211.752px; top: 232.485px;"><span class="icon">🌻</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-rose" style="left: 124px; top: 253px;"><span class="icon">💖</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-pink" style="left: 152px; top: 216px;"><span class="icon">💫</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-cyan" style="left: 189px; top: 187px;"><span class="icon">💕</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-blue" style="left: 230px; top: 167px;"><span class="icon">🎈</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-green" style="left: 59.0978px; top: 240.783px;"><span class="icon">🫧</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-blue" style="left: 275px; top: 158px;"><span class="icon">💝</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-blue" style="left: 319px; top: 159px;"><span class="icon">☀️</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-cyan" style="left: 360px; top: 172px;"><span class="icon">🫧</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-pink" style="left: 396px; top: 192px;"><span class="icon">🫧</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-green" style="left: 210.829px; top: 106.921px;"><span class="icon">💕</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-orange" style="left: 425px; top: 219px;"><span class="icon">🌷</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-cyan" style="left: 446px; top: 247px;"><span class="icon">🎀</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-cyan" style="left: 460px; top: 275px;"><span class="icon">✨</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-yellow" style="left: 468px; top: 297px;"><span class="icon">🌻</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-purple" style="left: 115.99px; top: 546.899px;"><span class="icon">💕</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-orange" style="left: 471px; top: 312px;"><span class="icon">🌻</span><div class="content"><span class="text">❤ 爱你 ❤</span></div></div><div class="popup scheme-blue" style="left: 40.5352px; top: 269.189px;"><span class="icon">💫</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-yellow" style="left: 225.237px; top: 527.891px;"><span class="icon">🌻</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-yellow" style="left: 20.9707px; top: 308.669px;"><span class="icon">🎀</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-cyan" style="left: 46.5254px; top: 154.815px;"><span class="icon">☀️</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-blue" style="left: 132.069px; top: 505.898px;"><span class="icon">🌻</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-rose" style="left: 16.7871px; top: 31.8528px;"><span class="icon">🎵</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-purple" style="left: 593.032px; top: 490.418px;"><span class="icon">🌷</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-green" style="left: 164.909px; top: 527.37px;"><span class="icon">🌻</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-pink" style="left: 331.034px; top: 798.744px;"><span class="icon">☀️</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-pink" style="left: 176.475px; top: 24.8843px;"><span class="icon">🎀</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-cyan" style="left: 297.37px; top: 12.2232px;"><span class="icon">🫧</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-blue" style="left: 222.981px; top: 445.101px;"><span class="icon">🌻</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-blue" style="left: 436.038px; top: 585.892px;"><span class="icon">🍀</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-rose" style="left: 141.32px; top: 33.813px;"><span class="icon">🌸</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-cyan" style="left: 314.797px; top: 193.466px;"><span class="icon">🌻</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-yellow" style="left: 122.054px; top: 490.783px;"><span class="icon">💫</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-cyan" style="left: 468.046px; top: 795.423px;"><span class="icon">✨</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-pink" style="left: 206.318px; top: 252.629px;"><span class="icon">💝</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-pink" style="left: 75.7156px; top: 438.788px;"><span class="icon">💫</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-yellow" style="left: 113.637px; top: 558.699px;"><span class="icon">🌟</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-cyan" style="left: 633.229px; top: 660.331px;"><span class="icon">🌸</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-blue" style="left: 140.1px; top: 598.056px;"><span class="icon">☀️</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-orange" style="left: 121.082px; top: 682.998px;"><span class="icon">✨</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-purple" style="left: 115.74px; top: 616.93px;"><span class="icon">☀️</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-purple" style="left: 668.468px; top: 389.358px;"><span class="icon">✨</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 63.2101px; top: 87.8217px;"><span class="icon">🌷</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-purple" style="left: 344.847px; top: 92.2616px;"><span class="icon">💝</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-orange" style="left: 206.861px; top: 56.0578px;"><span class="icon">💫</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-pink" style="left: 627.749px; top: 728.515px;"><span class="icon">🎈</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-rose" style="left: 188.481px; top: 281.293px;"><span class="icon">☀️</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-yellow" style="left: 173.449px; top: 599.63px;"><span class="icon">🎵</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-cyan" style="left: 228.236px; top: 45.4778px;"><span class="icon">💖</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-green" style="left: 551.635px; top: 554.081px;"><span class="icon">🫧</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-purple" style="left: 58.3427px; top: 618.816px;"><span class="icon">🎵</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-yellow" style="left: 537.737px; top: 285.774px;"><span class="icon">🌟</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-green" style="left: 207.13px; top: 121.69px;"><span class="icon">🫧</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-yellow" style="left: 553.368px; top: 139.592px;"><span class="icon">🌟</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-pink" style="left: 119.207px; top: 375.022px;"><span class="icon">💫</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-rose" style="left: 654.777px; top: 493.636px;"><span class="icon">🌻</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-blue" style="left: 112.857px; top: 268.161px;"><span class="icon">🫧</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-cyan" style="left: 276.266px; top: 209.334px;"><span class="icon">🦋</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-pink" style="left: 177.231px; top: 330.11px;"><span class="icon">🌻</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-orange" style="left: 507.065px; top: 277.871px;"><span class="icon">🌻</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-pink" style="left: 18.5731px; top: 626.873px;"><span class="icon">🎵</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-rose" style="left: 158.852px; top: 646.067px;"><span class="icon">🎀</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-green" style="left: 181.429px; top: 58.2777px;"><span class="icon">🫧</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-yellow" style="left: 167.344px; top: 653.948px;"><span class="icon">🎀</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-pink" style="left: 129.519px; top: 254.236px;"><span class="icon">✨</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-rose" style="left: 619.799px; top: 256.559px;"><span class="icon">🦋</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 2.85752px; top: 445.752px;"><span class="icon">☀️</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-pink" style="left: 28.5562px; top: 655.307px;"><span class="icon">💕</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-cyan" style="left: 133.978px; top: 449.733px;"><span class="icon">🦋</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-purple" style="left: 125.853px; top: 269.132px;"><span class="icon">💖</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-rose" style="left: 92.9855px; top: 469.195px;"><span class="icon">☀️</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-blue" style="left: 58.0984px; top: 615.28px;"><span class="icon">💝</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-purple" style="left: 119.421px; top: 389.756px;"><span class="icon">🌻</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-cyan" style="left: 328.677px; top: 309.31px;"><span class="icon">🎀</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-rose" style="left: 216.859px; top: 498.311px;"><span class="icon">🌻</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-rose" style="left: 104.713px; top: 93.2273px;"><span class="icon">🌟</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-purple" style="left: 204.53px; top: 563.931px;"><span class="icon">🎈</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-orange" style="left: 202.935px; top: 427.231px;"><span class="icon">🎵</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-purple" style="left: 102.501px; top: 73.0223px;"><span class="icon">💝</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-yellow" style="left: 535.536px; top: 157.809px;"><span class="icon">💕</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-blue" style="left: 227.469px; top: 260.834px;"><span class="icon">🍀</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-blue" style="left: 75.2614px; top: 321.1px;"><span class="icon">🎈</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-green" style="left: 522.359px; top: 736.573px;"><span class="icon">💫</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-orange" style="left: 561.947px; top: 702.469px;"><span class="icon">💖</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-orange" style="left: 627.341px; top: 145.67px;"><span class="icon">🎀</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-blue" style="left: 233.579px; top: 15.3905px;"><span class="icon">🌟</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-purple" style="left: 8.85987px; top: 19.1485px;"><span class="icon">💕</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-green" style="left: 29.0986px; top: 116.627px;"><span class="icon">🌟</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-green" style="left: 461.126px; top: 768.762px;"><span class="icon">🌸</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-pink" style="left: 66.3899px; top: 18.9381px;"><span class="icon">🌸</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-rose" style="left: 398.148px; top: 519.046px;"><span class="icon">💝</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-purple" style="left: 499.094px; top: 209.3px;"><span class="icon">🎀</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-cyan" style="left: 589.188px; top: 622.62px;"><span class="icon">✨</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-green" style="left: 478.915px; top: 495.13px;"><span class="icon">☀️</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-green" style="left: 34.9168px; top: 450.638px;"><span class="icon">🎵</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-orange" style="left: 107.104px; top: 499.599px;"><span class="icon">🎵</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-green" style="left: 447.39px; top: 461.743px;"><span class="icon">🌷</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-pink" style="left: 614.342px; top: 364.783px;"><span class="icon">🎈</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-pink" style="left: 171.68px; top: 424.617px;"><span class="icon">💫</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-blue" style="left: 540.007px; top: 495.002px;"><span class="icon">💫</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-rose" style="left: 345.606px; top: 551.757px;"><span class="icon">🎵</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-orange" style="left: 415.057px; top: 399.218px;"><span class="icon">☀️</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-pink" style="left: 430.195px; top: 106.024px;"><span class="icon">🎵</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-blue" style="left: 569.476px; top: 86.2493px;"><span class="icon">🦋</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-blue" style="left: 600.402px; top: 141.089px;"><span class="icon">🎈</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-pink" style="left: 269.901px; top: 515.595px;"><span class="icon">🍀</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-green" style="left: 82.948px; top: 722.708px;"><span class="icon">💝</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-rose" style="left: 368.675px; top: 50.468px;"><span class="icon">💫</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-yellow" style="left: 278.883px; top: 22.096px;"><span class="icon">🎵</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-green" style="left: 361.331px; top: 627.245px;"><span class="icon">🫧</span><div class="content"><span class="text">你是最棒的！</span></div></div></div>
+
+<!-- 提示 -->
+<div class="hint" id="hint" style="display: block; opacity: 1;">点击任意弹窗可关闭它 · 再次点击屏幕退出</div>
+
+<script>
+(function() {
+  // ============ 配置 ============
+  const TIPS = [
+    '记得多喝水哦~', '保持微笑，好运自然来', '今天也要元气满满！',
+    '早点休息别熬夜', '今天过得开心吗？', '你是最棒的！',
+    '听首喜欢的歌吧', '一切都会好起来', '奖励一下自己吧~',
+    '好好爱自己', '好好吃饭', '保持好心情',
+    '我想你了', '顺顺利利', '别熬夜', '天凉了多穿衣服',
+    '你值得被温柔以待', '今天也要加油呀', '做自己就好',
+    '累了就休息一下', '明天会更好', '要开心哦'
+  ];
+
+  const ICONS = ['💕', '✨', '🌟', '🎀', '🌷', '🌸', '🍀', '💖', '🌻', '🦋', '🎈', '💝', '🫧', '💫', '🎵', '☀️'];
+
+  const SCHEMES = ['pink', 'blue', 'green', 'yellow', 'purple', 'rose', 'cyan', 'orange'];
+
+  const CENTER_TEXT = '❤ 爱你 ❤';
+
+  const HEART_COUNT = 60;
+  const RANDOM_COUNT = 60;
+  const HEART_SPEED = 60;    // ms
+  const RANDOM_SPEED = 250;  // ms
+  const PARTICLE_INTERVAL = 800;
+
+  // ============ 状态 ============
+  let allPopups = [];
+  let running = false;
+  let particleTimer = null;
+
+  const container = document.getElementById('popupContainer');
+  const hint = document.getElementById('hint');
+  const loading = document.getElementById('loading');
+
+  // ============ 爱心坐标公式 ============
+  function heartPoints(cx, cy, scale, n) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const t = i * 2 * Math.PI / n;
+      const x = scale * 16 * Math.pow(Math.sin(t), 3) + cx;
+      const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) + cy;
+      pts.push({ x: Math.round(x), y: Math.round(y) });
+    }
+    return pts;
+  }
+
+  // ============ 创建弹窗 ============
+  function createPopup(x, y, tip, isCenter) {
+    const el = document.createElement('div');
+    el.className = 'popup scheme-' + SCHEMES[Math.floor(Math.random() * SCHEMES.length)];
+
+    const icon = ICONS[Math.floor(Math.random() * ICONS.length)];
+    const text = isCenter ? CENTER_TEXT : (tip || TIPS[Math.floor(Math.random() * TIPS.length)]);
+
+    const w = 260, h = 100;
+    const sw = window.innerWidth, sh = window.innerHeight;
+    x = Math.max(0, Math.min(x, sw - w));
+    y = Math.max(0, Math.min(y, sh - h));
+
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+
+    el.innerHTML = '<span class="icon">' + icon + '</span>' +
+                   '<div class="content"><span class="text">' + text + '</span></div>';
+
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      el.classList.add('fading');
+      setTimeout(function() {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        const idx = allPopups.indexOf(el);
+        if (idx > -1) allPopups.splice(idx, 1);
+      }, 300);
+    });
+
+    container.appendChild(el);
+    allPopups.push(el);
+    return el;
+  }
+
+  // ============ 背景粒子 ============
+  function spawnParticle() {
+    const icons = ['💕', '✨', '💖', '🌟', '🌸', '🦋', '💫', '🎀'];
+    const el = document.createElement('span');
+    el.className = 'particle';
+    el.textContent = icons[Math.floor(Math.random() * icons.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.bottom = '-30px';
+    el.style.animationDuration = (3 + Math.random() * 4) + 's';
+    el.style.fontSize = (14 + Math.random() * 20) + 'px';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', function() { el.remove(); });
+  }
+
+  function startParticles() {
+    spawnParticle();
+    particleTimer = setInterval(spawnParticle, PARTICLE_INTERVAL);
+  }
+
+  function stopParticles() {
+    if (particleTimer) { clearInterval(particleTimer); particleTimer = null; }
+  }
+
+  // ============ 主流程 ============
+  async function run() {
+    if (running) return;
+    running = true;
+    loading.classList.add('hidden');
+    hint.style.display = 'block';
+    startParticles();
+
+    const sw = window.innerWidth;
+    const sh = window.innerHeight;
+    const scale = Math.min(sw, sh) * 0.025;
+
+    const centerX = sw / 2;
+    const centerY = sh / 2 - 30;
+    const points = heartPoints(centerX, centerY, scale, HEART_COUNT);
+
+    // 阶段一：爱心形状
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+      createPopup(p.x, p.y, null, i === points.length - 1);
+      await sleep(HEART_SPEED);
+    }
+
+    await sleep(1500);
+
+    // 阶段二：随机散落
+    const w = 260, h = 100;
+    for (let i = 0; i < RANDOM_COUNT; i++) {
+      const x = Math.random() * (sw - w);
+      const y = Math.random() * (sh - h);
+      createPopup(x, y);
+      await sleep(RANDOM_SPEED);
+    }
+
+    // 退出提示
+    hint.textContent = '点击任意弹窗可关闭它 · 再次点击屏幕退出';
+    hint.style.opacity = '1';
+  }
+
+  function sleep(ms) {
+    return new Promise(function(resolve) { setTimeout(resolve, ms); });
+  }
+
+  // ============ 退出 ============
+  function quit() {
+    running = false;
+    stopParticles();
+    hint.style.display = 'none';
+
+    const popups = allPopups.slice();
+    popups.forEach(function(el, i) {
+      setTimeout(function() {
+        el.classList.add('fading');
+        setTimeout(function() {
+          if (el.parentNode) el.parentNode.removeChild(el);
+        }, 300);
+      }, i * 20);
+    });
+    allPopups = [];
+
+    // 清理粒子
+    document.querySelectorAll('.particle').forEach(function(el) { el.remove(); });
+
+    // 显示加载页
+    setTimeout(function() {
+      loading.classList.remove('hidden');
+    }, 1000);
+  }
+
+  // ============ 事件绑定 ============
+  document.getElementById('startBtn').addEventListener('click', run);
+
+  // 点击空白区域退出
+  document.addEventListener('click', function(e) {
+    if (running && e.target === document.body || e.target === container) {
+      quit();
+    }
+  });
+
+  // 键盘退出
+  document.addEventListener('keydown', function(e) {
+    if (e.key === ' ' || e.key === 'Escape') {
+      e.preventDefault();
+      if (running) quit();
+      else run();
+    }
+  });
+
+  // 窗口大小变化时更新
+  window.addEventListener('resize', function() {
+    if (running) quit();
+  });
+})();
+</script>
+
+<div data-trae-edit-ui="true"><div data-trae-edit-ui="true" class="trae-browser-inspect-highlight-tag"></div><div data-trae-edit-ui="true" class="trae-browser-inspect-highlight-tag"></div><div data-trae-edit-ui="true" class="trae-browser-inspect-highlight-box"></div><div data-trae-edit-ui="true" class="trae-browser-inspect-highlight-box trae-browser-inspect-select-highlight-box"></div><div data-trae-edit-ui="true" class="trae-add-to-chat-card trae-browser-inspect-select-button" style="display: none;"><div data-trae-edit-ui="true" class="trae-add-to-chat-content"><div data-trae-edit-ui="true" class="trae-buttons-view"><button data-trae-edit-ui="true" type="button" class="trae-action-button"><span data-trae-edit-ui="true" class="trae-action-button-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M14.3332 8.0013C14.3332 11.3346 11.8702 13.3346 7.99984 13.3346C6.8331 13.3346 5.60267 13.2116 4.56857 12.668C4.56857 12.668 3.07391 13.7639 1.6665 13.0972C2.70858 11.7228 2.44754 10.7933 2.38257 10.6161C2.37481 10.595 2.36622 10.576 2.35754 10.5552C2.26265 10.3277 1.6665 8.86419 1.6665 8.0013C1.6665 4.66797 4.12947 2.66797 7.99984 2.66797" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
+    <path d="M5.99951 7.41797C6.32157 7.41797 6.58332 7.67896 6.5835 8.00098C6.5835 8.32314 6.32168 8.58496 5.99951 8.58496C5.6775 8.58479 5.4165 8.32303 5.4165 8.00098C5.41668 7.67907 5.6776 7.41814 5.99951 7.41797ZM9.99951 7.41797C10.3216 7.41797 10.5833 7.67896 10.5835 8.00098C10.5835 8.32314 10.3217 8.58496 9.99951 8.58496C9.6775 8.58479 9.4165 8.32303 9.4165 8.00098C9.41668 7.67907 9.6776 7.41814 9.99951 7.41797Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="square"></path>
+    <path d="M15.001 4L13 3L12 1L11 3L9 4L11 5L12 7L13 5L15.001 4Z" fill="currentColor"></path>
+  </svg></span><span data-trae-edit-ui="true" class="trae-action-button-title" data-i18n="commentToChat">Comment to Chat</span><span data-trae-edit-ui="true" class="trae-action-button-shortcut"><span data-trae-edit-ui="true" class="trae-shortcut-container"><span data-trae-edit-ui="true" class="trae-shortcut-key">Ctrl</span><span data-trae-edit-ui="true" class="trae-shortcut-key">J</span></span></span></button><div data-trae-edit-ui="true" class="trae-add-to-chat-divider"></div><button data-trae-edit-ui="true" type="button" class="trae-action-button"><span data-trae-edit-ui="true" class="trae-action-button-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M14.3333 8.0013C14.3333 4.66797 11.8703 2.66797 7.99996 2.66797C4.12959 2.66797 1.66663 4.66797 1.66663 8.0013C1.66663 8.86419 2.26277 10.3277 2.35767 10.5552C2.36634 10.576 2.37493 10.595 2.38269 10.6161C2.44766 10.7933 2.7087 11.7228 1.66663 13.0972C3.07403 13.7639 4.5687 12.668 4.5687 12.668C5.60279 13.2116 6.83323 13.3346 7.99996 13.3346C11.8703 13.3346 14.3333 11.3346 14.3333 8.0013Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"></path>
+    <path d="M4.99963 7.41797C5.32169 7.41797 5.58344 7.67896 5.58362 8.00098C5.58362 8.32314 5.3218 8.58496 4.99963 8.58496C4.67762 8.58479 4.41663 8.32303 4.41663 8.00098C4.4168 7.67907 4.67773 7.41814 4.99963 7.41797ZM7.99963 7.41797C8.32169 7.41797 8.58344 7.67896 8.58362 8.00098C8.58362 8.32314 8.3218 8.58496 7.99963 8.58496C7.67762 8.58479 7.41663 8.32303 7.41663 8.00098C7.4168 7.67907 7.67773 7.41814 7.99963 7.41797ZM10.9996 7.41797C11.3217 7.41797 11.5834 7.67896 11.5836 8.00098C11.5836 8.32314 11.3218 8.58496 10.9996 8.58496C10.6776 8.58479 10.4166 8.32303 10.4166 8.00098C10.4168 7.67907 10.6777 7.41814 10.9996 7.41797Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="square"></path>
+  </svg></span><span data-trae-edit-ui="true" class="trae-action-button-title" data-i18n="addToChat">Add to Chat</span><span data-trae-edit-ui="true" class="trae-action-button-shortcut"><span data-trae-edit-ui="true" class="trae-shortcut-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M9.5 3V6.5C9.5 7.05228 9.05228 7.5 8.5 7.5H3M3 7.5L5 5.5M3 7.5L5 9.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg></span></span></button></div></div></div><div data-trae-edit-ui="true" class="trae-browser-inspect-overlay" style="display: none;"></div></div><div data-trae-edit-ui="true" class="trae-add-to-chat-card" style="display: none; position: fixed; z-index: 1400;"><div data-trae-edit-ui="true" class="trae-add-to-chat-content"><div data-trae-edit-ui="true" class="trae-buttons-view"><button data-trae-edit-ui="true" type="button" class="trae-action-button"><span data-trae-edit-ui="true" class="trae-action-button-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M14.3332 8.0013C14.3332 11.3346 11.8702 13.3346 7.99984 13.3346C6.8331 13.3346 5.60267 13.2116 4.56857 12.668C4.56857 12.668 3.07391 13.7639 1.6665 13.0972C2.70858 11.7228 2.44754 10.7933 2.38257 10.6161C2.37481 10.595 2.36622 10.576 2.35754 10.5552C2.26265 10.3277 1.6665 8.86419 1.6665 8.0013C1.6665 4.66797 4.12947 2.66797 7.99984 2.66797" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
+    <path d="M5.99951 7.41797C6.32157 7.41797 6.58332 7.67896 6.5835 8.00098C6.5835 8.32314 6.32168 8.58496 5.99951 8.58496C5.6775 8.58479 5.4165 8.32303 5.4165 8.00098C5.41668 7.67907 5.6776 7.41814 5.99951 7.41797ZM9.99951 7.41797C10.3216 7.41797 10.5833 7.67896 10.5835 8.00098C10.5835 8.32314 10.3217 8.58496 9.99951 8.58496C9.6775 8.58479 9.4165 8.32303 9.4165 8.00098C9.41668 7.67907 9.6776 7.41814 9.99951 7.41797Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="square"></path>
+    <path d="M15.001 4L13 3L12 1L11 3L9 4L11 5L12 7L13 5L15.001 4Z" fill="currentColor"></path>
+  </svg></span><span data-trae-edit-ui="true" class="trae-action-button-title" data-i18n="commentToChat">Comment to Chat</span><span data-trae-edit-ui="true" class="trae-action-button-shortcut"><span data-trae-edit-ui="true" class="trae-shortcut-container"><span data-trae-edit-ui="true" class="trae-shortcut-key">Ctrl</span><span data-trae-edit-ui="true" class="trae-shortcut-key">J</span></span></span></button><div data-trae-edit-ui="true" class="trae-add-to-chat-divider"></div><button data-trae-edit-ui="true" type="button" class="trae-action-button"><span data-trae-edit-ui="true" class="trae-action-button-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M14.3333 8.0013C14.3333 4.66797 11.8703 2.66797 7.99996 2.66797C4.12959 2.66797 1.66663 4.66797 1.66663 8.0013C1.66663 8.86419 2.26277 10.3277 2.35767 10.5552C2.36634 10.576 2.37493 10.595 2.38269 10.6161C2.44766 10.7933 2.7087 11.7228 1.66663 13.0972C3.07403 13.7639 4.5687 12.668 4.5687 12.668C5.60279 13.2116 6.83323 13.3346 7.99996 13.3346C11.8703 13.3346 14.3333 11.3346 14.3333 8.0013Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"></path>
+    <path d="M4.99963 7.41797C5.32169 7.41797 5.58344 7.67896 5.58362 8.00098C5.58362 8.32314 5.3218 8.58496 4.99963 8.58496C4.67762 8.58479 4.41663 8.32303 4.41663 8.00098C4.4168 7.67907 4.67773 7.41814 4.99963 7.41797ZM7.99963 7.41797C8.32169 7.41797 8.58344 7.67896 8.58362 8.00098C8.58362 8.32314 8.3218 8.58496 7.99963 8.58496C7.67762 8.58479 7.41663 8.32303 7.41663 8.00098C7.4168 7.67907 7.67773 7.41814 7.99963 7.41797ZM10.9996 7.41797C11.3217 7.41797 11.5834 7.67896 11.5836 8.00098C11.5836 8.32314 11.3218 8.58496 10.9996 8.58496C10.6776 8.58479 10.4166 8.32303 10.4166 8.00098C10.4168 7.67907 10.6777 7.41814 10.9996 7.41797Z" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="square"></path>
+  </svg></span><span data-trae-edit-ui="true" class="trae-action-button-title" data-i18n="addToChat">Add to Chat</span><span data-trae-edit-ui="true" class="trae-action-button-shortcut"><span data-trae-edit-ui="true" class="trae-shortcut-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M9.5 3V6.5C9.5 7.05228 9.05228 7.5 8.5 7.5H3M3 7.5L5 5.5M3 7.5L5 9.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg></span></span></button></div></div></div><span class="particle" style="left: 87.5776%; bottom: -30px; animation-duration: 6.24948s; font-size: 20.1882px;">🌸</span><span class="particle" style="left: 63.6137%; bottom: -30px; animation-duration: 3.02442s; font-size: 22.6232px;">🌟</span><span class="particle" style="left: 89.7387%; bottom: -30px; animation-duration: 6.88903s; font-size: 20.3264px;">💕</span><span class="particle" style="left: 51.921%; bottom: -30px; animation-duration: 3.89977s; font-size: 16.5429px;">💖</span><span class="particle" style="left: 23.1348%; bottom: -30px; animation-duration: 6.48887s; font-size: 27.884px;">🦋</span></body></html>
