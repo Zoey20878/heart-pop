@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>爱心弹窗</title>
+<title>💖 爱心弹窗</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -11,12 +11,13 @@ body {
   height: 100vh;
   overflow: hidden;
   background: #1a1a2e;
-  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 加载提示 */
 .loading {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -58,12 +59,14 @@ body {
   50% { transform: scale(1.2); }
 }
 
+/* 弹窗容器 */
 .popup-container {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
 }
 
+/* 弹窗 */
 .popup {
   position: absolute;
   width: 260px;
@@ -108,6 +111,7 @@ body {
   word-break: break-all;
 }
 
+/* 配色方案 */
 .popup.scheme-pink    { background: rgba(255, 228, 230, 0.92); color: #BE123C; }
 .popup.scheme-blue    { background: rgba(240, 249, 255, 0.92); color: #0369A1; }
 .popup.scheme-green   { background: rgba(240, 253, 244, 0.92); color: #15803D; }
@@ -117,6 +121,7 @@ body {
 .popup.scheme-cyan    { background: rgba(236, 254, 255, 0.92); color: #0E7490; }
 .popup.scheme-orange  { background: rgba(255, 247, 237, 0.92); color: #9A3412; }
 
+/* 背景粒子 */
 .particle {
   position: absolute;
   pointer-events: none;
@@ -129,6 +134,7 @@ body {
   100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
 }
 
+/* 提示文字 */
 .hint {
   position: fixed;
   bottom: 30px;
@@ -142,6 +148,7 @@ body {
   pointer-events: none;
 }
 
+/* 移动端适配 */
 @media (max-width: 600px) {
   .popup {
     width: 200px;
@@ -157,19 +164,23 @@ body {
 </head>
 <body>
 
-<div class="loading hidden" id="loading">
+<!-- 加载页 -->
+<div class="loading" id="loading">
   <div class="heart-icon">💖</div>
   <div class="text">点击开始</div>
   <button id="startBtn">💕 打开惊喜 💕</button>
 </div>
 
-<div class="popup-container" id="popupContainer"><div class="popup scheme-cyan" style="left: 150px; top: 384px;"><span class="icon">🌷</span><div class="content"><span class="text">❤ 爱你 ❤</span></div></div><div class="popup scheme-blue" style="left: 30.8765px; top: 726.515px;"><span class="icon">🌟</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-green" style="left: 21.6423px; top: 178.782px;"><span class="icon">🎵</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-blue" style="left: 25.2906px; top: 576.352px;"><span class="icon">💝</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-rose" style="left: 0.648416px; top: 635.405px;"><span class="icon">🦋</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 35.5454px; top: 76.4761px;"><span class="icon">💕</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-green" style="left: 28.0826px; top: 212.749px;"><span class="icon">💫</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-green" style="left: 14.6078px; top: 692.973px;"><span class="icon">💫</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-rose" style="left: 25.5381px; top: 132.531px;"><span class="icon">💫</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-cyan" style="left: 33.4127px; top: 749.507px;"><span class="icon">🌻</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-rose" style="left: 36.7855px; top: 677.873px;"><span class="icon">🍀</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-orange" style="left: 471px; top: 317px;"><span class="icon">🫧</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-yellow" style="left: 471px; top: 312px;"><span class="icon">🫧</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-purple" style="left: 474px; top: 297px;"><span class="icon">🍀</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-purple" style="left: 13.1566px; top: 733.671px;"><span class="icon">💕</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-purple" style="left: 482px; top: 275px;"><span class="icon">🍀</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-orange" style="left: 496px; top: 247px;"><span class="icon">🍀</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-rose" style="left: 517px; top: 219px;"><span class="icon">🎀</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-yellow" style="left: 546px; top: 192px;"><span class="icon">🌷</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-cyan" style="left: 22.2106px; top: 683.255px;"><span class="icon">🌻</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-pink" style="left: 582px; top: 172px;"><span class="icon">✨</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-blue" style="left: 623px; top: 159px;"><span class="icon">🎀</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-blue" style="left: 667px; top: 158px;"><span class="icon">☀️</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 167px;"><span class="icon">🎈</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-blue" style="left: 37.2971px; top: 77.2039px;"><span class="icon">🌟</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-purple" style="left: 682px; top: 187px;"><span class="icon">☀️</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-cyan" style="left: 682px; top: 216px;"><span class="icon">🍀</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 253px;"><span class="icon">🌟</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-green" style="left: 682px; top: 295px;"><span class="icon">🎈</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-blue" style="left: 10.8737px; top: 44.914px;"><span class="icon">💫</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 340px;"><span class="icon">🍀</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-yellow" style="left: 682px; top: 387px;"><span class="icon">🌻</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-green" style="left: 682px; top: 433px;"><span class="icon">💖</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-blue" style="left: 682px; top: 477px;"><span class="icon">💫</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-yellow" style="left: 36.2148px; top: 155.2px;"><span class="icon">💖</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-rose" style="left: 682px; top: 520px;"><span class="icon">☀️</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-cyan" style="left: 682px; top: 560px;"><span class="icon">💕</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-cyan" style="left: 667px; top: 599px;"><span class="icon">🎈</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-orange" style="left: 623px; top: 637px;"><span class="icon">🌻</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-rose" style="left: 582px; top: 673px;"><span class="icon">🎀</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-pink" style="left: 15.3284px; top: 128.1px;"><span class="icon">💝</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-purple" style="left: 546px; top: 708px;"><span class="icon">💝</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-cyan" style="left: 517px; top: 740px;"><span class="icon">🎈</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-pink" style="left: 496px; top: 769px;"><span class="icon">🌸</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-blue" style="left: 30.9922px; top: 626.538px;"><span class="icon">🌸</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-pink" style="left: 482px; top: 793px;"><span class="icon">🌸</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-rose" style="left: 474px; top: 811px;"><span class="icon">💖</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-rose" style="left: 471px; top: 823px;"><span class="icon">🌷</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-pink" style="left: 471px; top: 826px;"><span class="icon">🎈</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-green" style="left: 471px; top: 823px;"><span class="icon">🎵</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-orange" style="left: 20.8441px; top: 487.93px;"><span class="icon">🎈</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-green" style="left: 468px; top: 811px;"><span class="icon">💝</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-green" style="left: 460px; top: 793px;"><span class="icon">🌟</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-orange" style="left: 446px; top: 769px;"><span class="icon">🌷</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-green" style="left: 425px; top: 740px;"><span class="icon">🌟</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-pink" style="left: 17.7575px; top: 388.284px;"><span class="icon">🍀</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-yellow" style="left: 396px; top: 708px;"><span class="icon">☀️</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-cyan" style="left: 360px; top: 673px;"><span class="icon">🍀</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-purple" style="left: 319px; top: 637px;"><span class="icon">✨</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-rose" style="left: 275px; top: 599px;"><span class="icon">💫</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-yellow" style="left: 14.3675px; top: 426.997px;"><span class="icon">💝</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-rose" style="left: 230px; top: 560px;"><span class="icon">💝</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-blue" style="left: 189px; top: 520px;"><span class="icon">💖</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-yellow" style="left: 152px; top: 477px;"><span class="icon">💫</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-orange" style="left: 124px; top: 433px;"><span class="icon">💝</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-purple" style="left: 2.76861px; top: 530.913px;"><span class="icon">💕</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-orange" style="left: 107px; top: 387px;"><span class="icon">🫧</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-pink" style="left: 101px; top: 340px;"><span class="icon">🌻</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-yellow" style="left: 107px; top: 295px;"><span class="icon">☀️</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-yellow" style="left: 124px; top: 253px;"><span class="icon">🫧</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-green" style="left: 25.7286px; top: 178.259px;"><span class="icon">🎵</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-green" style="left: 152px; top: 216px;"><span class="icon">🌸</span><div class="content"><span class="text">我想你了</span></div></div><div class="popup scheme-orange" style="left: 189px; top: 187px;"><span class="icon">💝</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-green" style="left: 230px; top: 167px;"><span class="icon">🌷</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-orange" style="left: 275px; top: 158px;"><span class="icon">✨</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-green" style="left: 12.0134px; top: 752.202px;"><span class="icon">💕</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-pink" style="left: 319px; top: 159px;"><span class="icon">💝</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-cyan" style="left: 360px; top: 172px;"><span class="icon">☀️</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-blue" style="left: 396px; top: 192px;"><span class="icon">🌸</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-rose" style="left: 425px; top: 219px;"><span class="icon">🫧</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-yellow" style="left: 22.1758px; top: 356.839px;"><span class="icon">🎵</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-yellow" style="left: 446px; top: 247px;"><span class="icon">💫</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-pink" style="left: 460px; top: 275px;"><span class="icon">🌻</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-pink" style="left: 468px; top: 297px;"><span class="icon">💕</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-blue" style="left: 471px; top: 312px;"><span class="icon">💫</span><div class="content"><span class="text">❤ 爱你 ❤</span></div></div><div class="popup scheme-orange" style="left: 11.2988px; top: 785.184px;"><span class="icon">💝</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-rose" style="left: 13.7764px; top: 487.268px;"><span class="icon">🎵</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-green" style="left: 29.1823px; top: 798.637px;"><span class="icon">💝</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-blue" style="left: 2.61645px; top: 331.243px;"><span class="icon">💝</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-yellow" style="left: 12.1352px; top: 541.561px;"><span class="icon">✨</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-green" style="left: 21.9157px; top: 237.147px;"><span class="icon">🍀</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-yellow" style="left: 28.4538px; top: 593.131px;"><span class="icon">🎀</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 104.437px; top: 808.689px;"><span class="icon">🫧</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-cyan" style="left: 31.6716px; top: 150.446px;"><span class="icon">🫧</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-rose" style="left: 350.005px; top: 763.528px;"><span class="icon">💫</span><div class="content"><span class="text">累了就休息一下</span></div></div><div class="popup scheme-rose" style="left: 20.827px; top: 670.834px;"><span class="icon">🌷</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-orange" style="left: 459.242px; top: 537.35px;"><span class="icon">💕</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-green" style="left: 19.9882px; top: 651.912px;"><span class="icon">🌻</span><div class="content"><span class="text">做自己就好</span></div></div><div class="popup scheme-purple" style="left: 420.311px; top: 797.401px;"><span class="icon">🦋</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-purple" style="left: 24.3589px; top: 537.079px;"><span class="icon">✨</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-blue" style="left: 143.073px; top: 735.727px;"><span class="icon">🍀</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-green" style="left: 20.7215px; top: 763.226px;"><span class="icon">🌸</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-pink" style="left: 551.111px; top: 714.439px;"><span class="icon">🌷</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-blue" style="left: 24.9554px; top: 455.351px;"><span class="icon">🦋</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-rose" style="left: 454.104px; top: 797.201px;"><span class="icon">💫</span><div class="content"><span class="text">你是最棒的！</span></div></div><div class="popup scheme-green" style="left: 15.0116px; top: 412.993px;"><span class="icon">🍀</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-blue" style="left: 375.298px; top: 174.348px;"><span class="icon">🌸</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-cyan" style="left: 18.861px; top: 441.144px;"><span class="icon">🌷</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-green" style="left: 188.551px; top: 89.6503px;"><span class="icon">🌸</span><div class="content"><span class="text">保持好心情</span></div></div><div class="popup scheme-purple" style="left: 14.6128px; top: 24.2044px;"><span class="icon">🎀</span><div class="content"><span class="text">今天过得开心吗？</span></div></div><div class="popup scheme-yellow" style="left: 175.564px; top: 356.568px;"><span class="icon">💝</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-yellow" style="left: 19.2173px; top: 565.492px;"><span class="icon">🎈</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-cyan" style="left: 183.17px; top: 769.028px;"><span class="icon">💖</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-pink" style="left: 19.1761px; top: 14.7365px;"><span class="icon">🎵</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-orange" style="left: 509.035px; top: 1.31016px;"><span class="icon">🌻</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-cyan" style="left: 15.7855px; top: 1.49952px;"><span class="icon">☀️</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-orange" style="left: 400.826px; top: 659.091px;"><span class="icon">🌻</span><div class="content"><span class="text">保持微笑，好运自然来</span></div></div><div class="popup scheme-purple" style="left: 32.4067px; top: 378.561px;"><span class="icon">🌸</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-green" style="left: 221.981px; top: 367.276px;"><span class="icon">🌟</span><div class="content"><span class="text">好好爱自己</span></div></div><div class="popup scheme-purple" style="left: 2.71326px; top: 371.569px;"><span class="icon">🌸</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-purple" style="left: 546.18px; top: 354.018px;"><span class="icon">🎵</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-yellow" style="left: 24.2868px; top: 513.198px;"><span class="icon">🦋</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-purple" style="left: 380.712px; top: 508.311px;"><span class="icon">✨</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-pink" style="left: 16.4624px; top: 52.3798px;"><span class="icon">✨</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-blue" style="left: 270.258px; top: 351.893px;"><span class="icon">💖</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-blue" style="left: 25.2877px; top: 95.4959px;"><span class="icon">🌻</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-cyan" style="left: 316.489px; top: 792.331px;"><span class="icon">🌻</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-orange" style="left: 7.73569px; top: 412.084px;"><span class="icon">🌸</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-cyan" style="left: 154.881px; top: 271.927px;"><span class="icon">💖</span><div class="content"><span class="text">要开心哦</span></div></div><div class="popup scheme-purple" style="left: 9.60428px; top: 773.379px;"><span class="icon">🍀</span><div class="content"><span class="text">今天也要加油呀</span></div></div><div class="popup scheme-purple" style="left: 632.867px; top: 252.179px;"><span class="icon">💫</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-pink" style="left: 10.6261px; top: 791.84px;"><span class="icon">✨</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-rose" style="left: 141.88px; top: 691.096px;"><span class="icon">💫</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-blue" style="left: 15.0282px; top: 94.8414px;"><span class="icon">💫</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-yellow" style="left: 433.431px; top: 303.616px;"><span class="icon">🦋</span><div class="content"><span class="text">听首喜欢的歌吧</span></div></div><div class="popup scheme-pink" style="left: 18.831px; top: 724.932px;"><span class="icon">🌻</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 8.78108px; top: 364.121px;"><span class="icon">🌸</span><div class="content"><span class="text">今天也要元气满满！</span></div></div><div class="popup scheme-blue" style="left: 39.9765px; top: 738.259px;"><span class="icon">💝</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-pink" style="left: 586.515px; top: 634.641px;"><span class="icon">🎀</span><div class="content"><span class="text">奖励一下自己吧~</span></div></div><div class="popup scheme-pink" style="left: 5.21909px; top: 349.733px;"><span class="icon">🫧</span><div class="content"><span class="text">好好吃饭</span></div></div><div class="popup scheme-purple" style="left: 350.445px; top: 814.979px;"><span class="icon">🫧</span><div class="content"><span class="text">你值得被温柔以待</span></div></div><div class="popup scheme-cyan" style="left: 28.9655px; top: 354.379px;"><span class="icon">🎀</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-orange" style="left: 599.758px; top: 145.43px;"><span class="icon">🌻</span><div class="content"><span class="text">明天会更好</span></div></div><div class="popup scheme-cyan" style="left: 34.4289px; top: 496.15px;"><span class="icon">🫧</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-purple" style="left: 96.9525px; top: 229.052px;"><span class="icon">☀️</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-yellow" style="left: 31.7549px; top: 182.255px;"><span class="icon">🌷</span><div class="content"><span class="text">别熬夜</span></div></div><div class="popup scheme-pink" style="left: 197.936px; top: 682.069px;"><span class="icon">🦋</span><div class="content"><span class="text">早点休息别熬夜</span></div></div><div class="popup scheme-cyan" style="left: 17.1937px; top: 458.937px;"><span class="icon">🎀</span><div class="content"><span class="text">记得多喝水哦~</span></div></div><div class="popup scheme-green" style="left: 583.802px; top: 367.72px;"><span class="icon">🎀</span><div class="content"><span class="text">顺顺利利</span></div></div><div class="popup scheme-green" style="left: 11.5279px; top: 441.068px;"><span class="icon">🌷</span><div class="content"><span class="text">天凉了多穿衣服</span></div></div><div class="popup scheme-rose" style="left: 545.461px; top: 627.169px;"><span class="icon">✨</span><div class="content"><span class="text">一切都会好起来</span></div></div><div class="popup scheme-yellow" style="left: 143.333px; top: 39.8401px;"><span class="icon">✨</span><div class="content"><span class="text">别熬夜</span></div></div></div>
+<!-- 弹窗容器 -->
+<div class="popup-container" id="popupContainer"></div>
 
-<div class="hint" id="hint" style="display: block; opacity: 1;">点击任意弹窗可关闭它 · 再次点击屏幕退出</div>
+<!-- 提示 -->
+<div class="hint" id="hint">点击任意弹窗可关闭它 · 再次点击屏幕退出</div>
 
 <script>
 (function() {
-  var TIPS = [
+  // ============ 配置 ============
+  const TIPS = [
     '记得多喝水哦~', '保持微笑，好运自然来', '今天也要元气满满！',
     '早点休息别熬夜', '今天过得开心吗？', '你是最棒的！',
     '听首喜欢的歌吧', '一切都会好起来', '奖励一下自己吧~',
@@ -179,63 +190,77 @@ body {
     '累了就休息一下', '明天会更好', '要开心哦'
   ];
 
-  var ICONS = ['💕', '✨', '🌟', '🎀', '🌷', '🌸', '🍀', '💖', '🌻', '🦋', '🎈', '💝', '🫧', '💫', '🎵', '☀️'];
-  var SCHEMES = ['pink', 'blue', 'green', 'yellow', 'purple', 'rose', 'cyan', 'orange'];
-  var CENTER_TEXT = '❤ 爱你 ❤';
-  var HEART_COUNT = 60;
-  var RANDOM_COUNT = 60;
-  var HEART_SPEED = 60;
-  var RANDOM_SPEED = 250;
-  var PARTICLE_INTERVAL = 800;
+  const ICONS = ['💕', '✨', '🌟', '🎀', '🌷', '🌸', '🍀', '💖', '🌻', '🦋', '🎈', '💝', '🫧', '💫', '🎵', '☀️'];
 
-  var allPopups = [];
-  var running = false;
-  var particleTimer = null;
+  const SCHEMES = ['pink', 'blue', 'green', 'yellow', 'purple', 'rose', 'cyan', 'orange'];
 
-  var container = document.getElementById('popupContainer');
-  var hint = document.getElementById('hint');
-  var loading = document.getElementById('loading');
+  const CENTER_TEXT = '❤ 爱你 ❤';
 
+  const HEART_COUNT = 60;
+  const RANDOM_COUNT = 60;
+  const HEART_SPEED = 60;    // ms
+  const RANDOM_SPEED = 250;  // ms
+  const PARTICLE_INTERVAL = 800;
+
+  // ============ 状态 ============
+  let allPopups = [];
+  let running = false;
+  let particleTimer = null;
+
+  const container = document.getElementById('popupContainer');
+  const hint = document.getElementById('hint');
+  const loading = document.getElementById('loading');
+
+  // ============ 爱心坐标公式 ============
   function heartPoints(cx, cy, scale, n) {
-    var pts = [];
-    for (var i = 0; i < n; i++) {
-      var t = i * 2 * Math.PI / n;
-      var x = scale * 16 * Math.pow(Math.sin(t), 3) + cx;
-      var y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) + cy;
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const t = i * 2 * Math.PI / n;
+      const x = scale * 16 * Math.pow(Math.sin(t), 3) + cx;
+      const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) + cy;
       pts.push({ x: Math.round(x), y: Math.round(y) });
     }
     return pts;
   }
 
+  // ============ 创建弹窗 ============
   function createPopup(x, y, tip, isCenter) {
-    var el = document.createElement('div');
+    const el = document.createElement('div');
     el.className = 'popup scheme-' + SCHEMES[Math.floor(Math.random() * SCHEMES.length)];
-    var icon = ICONS[Math.floor(Math.random() * ICONS.length)];
-    var text = isCenter ? CENTER_TEXT : (tip || TIPS[Math.floor(Math.random() * TIPS.length)]);
-    var w = 260, h = 100;
-    var sw = window.innerWidth, sh = window.innerHeight;
+
+    const icon = ICONS[Math.floor(Math.random() * ICONS.length)];
+    const text = isCenter ? CENTER_TEXT : (tip || TIPS[Math.floor(Math.random() * TIPS.length)]);
+
+    const w = 260, h = 100;
+    const sw = window.innerWidth, sh = window.innerHeight;
     x = Math.max(0, Math.min(x, sw - w));
     y = Math.max(0, Math.min(y, sh - h));
+
     el.style.left = x + 'px';
     el.style.top = y + 'px';
-    el.innerHTML = '<span class="icon">' + icon + '</span><div class="content"><span class="text">' + text + '</span></div>';
+
+    el.innerHTML = '<span class="icon">' + icon + '</span>' +
+                   '<div class="content"><span class="text">' + text + '</span></div>';
+
     el.addEventListener('click', function(e) {
       e.stopPropagation();
       el.classList.add('fading');
       setTimeout(function() {
         if (el.parentNode) el.parentNode.removeChild(el);
-        var idx = allPopups.indexOf(el);
+        const idx = allPopups.indexOf(el);
         if (idx > -1) allPopups.splice(idx, 1);
       }, 300);
     });
+
     container.appendChild(el);
     allPopups.push(el);
     return el;
   }
 
+  // ============ 背景粒子 ============
   function spawnParticle() {
-    var icons = ['💕', '✨', '💖', '🌟', '🌸', '🦋', '💫', '🎀'];
-    var el = document.createElement('span');
+    const icons = ['💕', '✨', '💖', '🌟', '🌸', '🦋', '💫', '🎀'];
+    const el = document.createElement('span');
     el.className = 'particle';
     el.textContent = icons[Math.floor(Math.random() * icons.length)];
     el.style.left = Math.random() * 100 + '%';
@@ -255,48 +280,56 @@ body {
     if (particleTimer) { clearInterval(particleTimer); particleTimer = null; }
   }
 
-  function sleep(ms) {
-    return new Promise(function(resolve) { setTimeout(resolve, ms); });
-  }
-
-  function run() {
+  // ============ 主流程 ============
+  async function run() {
     if (running) return;
     running = true;
     loading.classList.add('hidden');
     hint.style.display = 'block';
     startParticles();
 
-    var sw = window.innerWidth;
-    var sh = window.innerHeight;
-    var scale = Math.min(sw, sh) * 0.025;
-    var centerX = sw / 2;
-    var centerY = sh / 2 - 30;
-    var points = heartPoints(centerX, centerY, scale, HEART_COUNT);
+    const sw = window.innerWidth;
+    const sh = window.innerHeight;
+    const scale = Math.min(sw, sh) * 0.025;
 
-    (async function() {
-      for (var i = 0; i < points.length; i++) {
-        var p = points[i];
-        createPopup(p.x, p.y, null, i === points.length - 1);
-        await sleep(HEART_SPEED);
-      }
-      await sleep(1500);
-      var w = 260, h = 100;
-      for (var j = 0; j < RANDOM_COUNT; j++) {
-        var x = Math.random() * (sw - w);
-        var y = Math.random() * (sh - h);
-        createPopup(x, y);
-        await sleep(RANDOM_SPEED);
-      }
-      hint.textContent = '点击任意弹窗可关闭它 · 再次点击屏幕退出';
-      hint.style.opacity = '1';
-    })();
+    const centerX = sw / 2;
+    const centerY = sh / 2 - 30;
+    const points = heartPoints(centerX, centerY, scale, HEART_COUNT);
+
+    // 阶段一：爱心形状
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+      createPopup(p.x, p.y, null, i === points.length - 1);
+      await sleep(HEART_SPEED);
+    }
+
+    await sleep(1500);
+
+    // 阶段二：随机散落
+    const w = 260, h = 100;
+    for (let i = 0; i < RANDOM_COUNT; i++) {
+      const x = Math.random() * (sw - w);
+      const y = Math.random() * (sh - h);
+      createPopup(x, y);
+      await sleep(RANDOM_SPEED);
+    }
+
+    // 退出提示
+    hint.textContent = '点击任意弹窗可关闭它 · 再次点击屏幕退出';
+    hint.style.opacity = '1';
   }
 
+  function sleep(ms) {
+    return new Promise(function(resolve) { setTimeout(resolve, ms); });
+  }
+
+  // ============ 退出 ============
   function quit() {
     running = false;
     stopParticles();
     hint.style.display = 'none';
-    var popups = allPopups.slice();
+
+    const popups = allPopups.slice();
     popups.forEach(function(el, i) {
       setTimeout(function() {
         el.classList.add('fading');
@@ -306,20 +339,27 @@ body {
       }, i * 20);
     });
     allPopups = [];
+
+    // 清理粒子
     document.querySelectorAll('.particle').forEach(function(el) { el.remove(); });
+
+    // 显示加载页
     setTimeout(function() {
       loading.classList.remove('hidden');
     }, 1000);
   }
 
+  // ============ 事件绑定 ============
   document.getElementById('startBtn').addEventListener('click', run);
 
+  // 点击空白区域退出
   document.addEventListener('click', function(e) {
-    if (running && (e.target === document.body || e.target === container)) {
+    if (running && e.target === document.body || e.target === container) {
       quit();
     }
   });
 
+  // 键盘退出
   document.addEventListener('keydown', function(e) {
     if (e.key === ' ' || e.key === 'Escape') {
       e.preventDefault();
@@ -328,11 +368,11 @@ body {
     }
   });
 
+  // 窗口大小变化时更新
   window.addEventListener('resize', function() {
     if (running) quit();
   });
 })();
 </script>
 
-
-<span class="particle" style="left: 30.1595%; bottom: -30px; animation-duration: 6.08292s; font-size: 31.6143px;">💫</span><span class="particle" style="left: 55.3067%; bottom: -30px; animation-duration: 5.61548s; font-size: 27.1248px;">💖</span><span class="particle" style="left: 86.9702%; bottom: -30px; animation-duration: 3.70876s; font-size: 28.6921px;">💖</span><span class="particle" style="left: 63.7106%; bottom: -30px; animation-duration: 5.87429s; font-size: 21.5824px;">💕</span><span class="particle" style="left: 66.9586%; bottom: -30px; animation-duration: 6.012s; font-size: 23.7266px;">💖</span><span class="particle" style="left: 41.8003%; bottom: -30px; animation-duration: 3.86333s; font-size: 14.3766px;">🌟</span><span class="particle" style="left: 20.95%; bottom: -30px; animation-duration: 4.71436s; font-size: 30.0306px;">🌸</span><span class="particle" style="left: 85.2682%; bottom: -30px; animation-duration: 5.73456s; font-size: 17.4729px;">💕</span><span class="particle" style="left: 39.3404%; bottom: -30px; animation-duration: 4.26333s; font-size: 17.6409px;">💖</span></body></html>
+</body></html>
